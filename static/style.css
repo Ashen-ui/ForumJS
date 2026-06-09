@@ -1,0 +1,299 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background: #3a6ea5 url(background.png);
+    background-size: cover;
+    font-family: Tahoma, sans-serif;
+}
+
+.xp-window {
+    width: 800px;
+    height: auto;
+    background: #ECE9D8;
+    border: 2px solid #0855b6;
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
+    box-shadow: 2px 4px 14px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Title Bar ── */
+.xp-titlebar {
+    background: linear-gradient(
+        to bottom,
+        #0997ff,
+        #0053ee 10%,
+        #0050ee 40%,
+        #0046d5 88%,
+        #0234af
+    );
+    color: white;
+    font-weight: bold;
+    font-size: 13px;
+    padding: 5px 6px 5px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.close-btn {
+    width: 21px;
+    height: 21px;
+    background: linear-gradient(to bottom, #e88a67, #c23b14);
+    border: 1px solid white;
+    border-radius: 3px;
+    color: white;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);
+}
+
+/* ── Blue Header Banner ── */
+.xp-header {
+    background: linear-gradient(
+        to bottom,
+        #003baa 0%,
+        #1a5cc7 15%,
+        #4a82d4 35%,
+        #7ba3df 55%,
+        #a3bde6 75%,
+        #bfcfe8 100%
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 18px 24px 20px;
+    flex-shrink: 0;
+    border-bottom: 4px solid #e8982a;
+}
+
+.xp-header-copyright {
+    position: absolute;
+    left: 24px;
+    bottom: 14px;
+    color: rgba(255,255,255,0.85);
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+/* ── CSS-only Windows flag ── */
+.xp-logo-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.xp-flag {
+    width: 52px;
+    height: 52px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 2px;
+    transform: perspective(200px) rotateY(-12deg) skewY(-3deg);
+}
+
+.xp-flag div {
+    border-radius: 2px;
+}
+
+.flag-red    { background: linear-gradient(135deg, #ff4e2e, #d42b0e); }
+.flag-green  { background: linear-gradient(135deg, #72bf44, #3f9c21); }
+.flag-blue   { background: linear-gradient(135deg, #00adef, #0078c8); }
+.flag-yellow { background: linear-gradient(135deg, #feb916, #f09a00); }
+
+.xp-logo-text {
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+}
+
+.logo-microsoft {
+    font-size: 11.5px;
+    margin-bottom: 2px;
+    letter-spacing: 0.3px;
+}
+
+.logo-windows {
+    font-size: 32px;
+    font-weight: bold;
+    letter-spacing: -0.5px;
+}
+
+.logo-windows sup {
+    font-size: 15px;
+    color: #ffc800;
+    font-weight: bold;
+    position: relative;
+    top: -10px;
+}
+
+.logo-edition {
+    font-size: 14px;
+    letter-spacing: 3px;
+    margin-top: 1px;
+}
+
+.xp-header-ms {
+    position: absolute;
+    right: 24px;
+    bottom: 14px;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    font-style: italic;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.25);
+}
+
+/* ── Form ── */
+.xp-form {
+    padding: 24px 40px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.row label {
+    width: 170px;
+    font-size: 13px;
+}
+
+.row input {
+    flex: 1;
+    max-width: 400px;
+    height: 22px;
+    border: 1px solid #7f9db9;
+    padding: 1px 4px;
+    font-family: Tahoma, sans-serif;
+    font-size: 12px;
+}
+
+.policy {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+}
+
+.buttons {
+    margin-top: auto;
+    padding-bottom: 4px;
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+}
+
+.buttons button {
+    min-width: 96px;
+    height: 26px;
+    border: 1px solid #003c74;
+    border-radius: 3px;
+    background: linear-gradient(to bottom, #fff, #ECE9D8);
+    font-family: Tahoma, sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.buttons button:hover {
+    background: linear-gradient(to bottom, #fff, #ddd8c4);
+}
+
+.buttons button:active {
+    background: linear-gradient(to bottom, #ddd8c4, #ccc7b5);
+}
+
+/* ════════════════════════════════════════
+   LOGIN PAGE
+   ════════════════════════════════════════ */
+
+.xp-window-sm {
+    width: 560px;
+    height: auto;
+}
+
+.xp-window-sm .xp-header {
+    padding: 14px 16px 14px;
+}
+
+.xp-window-sm .xp-header-copyright {
+    left: 16px;
+    bottom: 10px;
+    font-size: 9px;
+}
+
+.xp-window-sm .xp-flag {
+    width: 36px;
+    height: 36px;
+}
+
+.xp-window-sm .logo-microsoft {
+    font-size: 9px;
+}
+
+.xp-window-sm .logo-windows {
+    font-size: 22px;
+}
+
+.xp-window-sm .logo-windows sup {
+    font-size: 11px;
+    top: -7px;
+}
+
+.xp-window-sm .logo-edition {
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+.xp-window-sm .xp-header-ms {
+    right: 16px;
+    bottom: 10px;
+    font-size: 13px;
+}
+
+.xp-window-sm .xp-form {
+    padding: 16px 24px 12px;
+}
+
+.xp-window-sm .row label {
+    width: 100px;
+    font-size: 12px;
+}
+
+.xp-window-sm .row input {
+    max-width: 330px;
+    height: 20px;
+}
+
+.xp-window-sm .row {
+    margin-bottom: 10px;
+}
+
+.xp-window-sm .buttons {
+    margin-top: auto;
+    gap: 8px;
+}
+
+.xp-window-sm .buttons button {
+    min-width: 80px;
+    font-size: 11px;
+}

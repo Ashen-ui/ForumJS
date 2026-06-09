@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Register New User</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<form action="">
+<div class="xp-window">
+
+    <div class="xp-titlebar">
+        <span>Register New User</span>
+        <button class="close-btn">✕</button>
+    </div>
+
+    <div class="xp-header">
+        <div class="xp-header-copyright">
+            Copyright &copy; 1985-2001<br>Microsoft Corporation
+        </div>
+
+        <div class="xp-logo-group">
+            <div class="xp-flag">
+                <div class="flag-red"></div>
+                <div class="flag-green"></div>
+                <div class="flag-blue"></div>
+                <div class="flag-yellow"></div>
+            </div>
+            <div class="xp-logo-text">
+                <span class="logo-microsoft">Microsoft&reg;</span>
+                <span class="logo-windows">Windows<sup>xp</sup></span>
+                <span class="logo-edition">Professional</span>
+            </div>
+        </div>
+
+        <div class="xp-header-ms">Microsoft&reg;</div>
+    </div>
+
+    <div class="xp-form">
+        <div class="row">
+            <label>User name:</label>
+            <input type="text" required>
+        </div>
+
+        <div class="row">
+            <label>Password:</label>
+            <input type="password" required>
+        </div>
+
+        <div class="row">
+            <label>Confirm password:</label>
+            <input type="password" required>
+        </div>
+
+        <div class="row">
+            <label>Email:</label>
+            <input type="email" 
+            placeholder required>
+        </div>
+
+        <div class="policy">
+            <input type="checkbox" required>
+            <span>I accept the User Policy</span>
+        </div>
+
+        <div class="buttons">
+            <button type="submit">Register</button>
+            <button type="button">Cancel</button>
+            <button type="button" onclick="window.location.href='http://localhost:3000/index'">Back</button>
+        </div>
+
+    </div>
+
+</div>
+</form>
+
+</body>
+</html>
