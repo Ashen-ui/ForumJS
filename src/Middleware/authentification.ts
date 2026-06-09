@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { db } from "../Database/db"
 
-function authUser(req: Request, res: Response, next: NextFunction) {
+export function authUser(req: Request, res: Response, next: NextFunction) {
     const loadingUser = req.cookies?.session
     if (loadingUser) {
         const session = db.prepare(
@@ -20,7 +20,7 @@ function authUser(req: Request, res: Response, next: NextFunction) {
     next()
 }
 
-function authenticate(req: Request, res: Response, next: NextFunction) {
+export function deAuth(req: Request, res: Response, next: NextFunction) {
     if (!res.locals.user) {
         return res.redirect("/")
         next()
