@@ -15,7 +15,9 @@
   "type": "commonjs",
   "devDependencies": {
     "@tsconfig/node24": "^24.0.4",
+    "@types/bcrypt": "^6.0.0",
     "@types/better-sqlite3": "^7.6.13",
+    "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.6",
     "@types/node": "^25.9.1",
     "tsc-watch": "^7.2.0",
@@ -23,8 +25,11 @@
     "typescript": "^6.0.3"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "better-sqlite3": "^12.10.0",
+    "cookie-parser": "^1.4.7",
     "ejs": "^6.0.1",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "uuid": "^14.0.0"
   }
 }

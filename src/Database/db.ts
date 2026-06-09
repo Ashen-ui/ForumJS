@@ -93,6 +93,14 @@ const insertPostCategories = db.prepare("INSERT INTO post_categories(post_id,cat
 const insertReactions = db.prepare("INSERT INTO reactions(user_id,post_id,comment_id,type) VALUES (?, ?, ?, ?)");
 const insertComments = db.prepare("INSERT INTO comments(post_id,user_id,content) VALUES (?, ?, ?)");
 
+
+db.exec(`
+    INSERT OR IGNORE INTO categories(name) VALUES('General');
+    INSERT OR IGNORE INTO categories(name) VALUES('Campus Life');
+    INSERT OR IGNORE INTO categories(name) VALUES('News');
+    INSERT OR IGNORE INTO categories(name) VALUES('Competitive');
+    `
+)
 // Manually add users
 // const data = [
 //     {username: "Ashen", email: "dzneladzelevani3@gmail.com", password_hash: "$2a$12$zOU7SiNA8aFrRPr02dZ9UuSyROBdw21IXfDa2IeweRb9R/4YbiASe", role: "Admin"}
