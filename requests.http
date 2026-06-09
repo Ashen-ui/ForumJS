@@ -1,0 +1,6 @@
+### index
+GET http://localhost:3000/  HTTP/1.1
+
+### registration
+GET http://localhost:3000/register  HTTP/1.1
+
