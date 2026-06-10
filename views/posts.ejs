@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Forum - Windows XP</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="posts.css">
+</head>
+<body class="posts-body">
+
+<div class="desktop-icons">
+    <div class="desktop-icon" id="folderIcon" ondblclick="openWindow()">
+        <div class="icon-img">📂</div>
+        <span class="icon-label">Forum Posts</span>
+    </div>
+
+    <% if (locals.user) { %>
+        <a href="/profile/<%= user.id %>" class="desktop-icon" style="text-decoration:none;">
+            <div class="icon-img">👤</div>
+            <span class="icon-label">My Profile</span>
+        </a>
+        <a href="/posts/create" class="desktop-icon" style="text-decoration:none;">
+            <div class="icon-img">📝</div>
+            <span class="icon-label">New Post</span>
+        </a>
+    <% } else { %>
+        <a href="/" class="desktop-icon" style="text-decoration:none;">
+            <div class="icon-img">🔑</div>
+            <span class="icon-label">Log In</span>
+        </a>
+        <a href="/register" class="desktop-icon" style="text-decoration:none;">
+            <div class="icon-img">📋</div>
+            <span class="icon-label">Register</span>
+        </a>
+    <% } %>
+</div>
+
+<div class="xp-window posts-window" id="postsWindow">
+
+    <div class="xp-titlebar" id="titlebar">
+        <span class="titlebar-text">📂 Forum Posts - Windows Explorer</span>
+        <div class="titlebar-controls">
+            <button class="ctrl-btn minimize-btn" onclick="minimizeWindow()" title="Minimize">_</button>
+            <button class="ctrl-btn maximize-btn" onclick="maximizeWindow()" title="Maximize">□</button>
+            <button class="close-btn" onclick="closeWindow()" title="Close">✕</button>
+        </div>
+    </div>
+
+    <div class="xp-toolbar">
+        <div class="toolbar-left">
+            <a href="/posts" class="toolbar-btn" title="Home">🏠 Home</a>
+            <span class="toolbar-sep"></span>
+            <% if (locals.user) { %>
+                <a href="/posts/create" class="toolbar-btn toolbar-create" title="New Post">✏️ New Post</a>
+                <span class="toolbar-sep"></span>
+            <% } %>
+        </div>
+
+        <div class="toolbar-center">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search posts..." class="xp-search-input">
+                <button class="xp-search-btn" onclick="handleSearch()">🔍</button>
+            </div>
+        </div>
+
+        <div class="toolbar-right">
+            <% if (locals.user) { %>
+                <div class="profile-dropdown">
+                    <button class="toolbar-btn profile-btn" id="profileToggle">
+                        👤 <%= user.username %> ▾
+                    </button>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="/profile/<%= user.id %>" class="dropdown-item">📁 My Profile</a>
+                        <div class="dropdown-divider"></div>
+                        <form action="/logout" method="post" style="margin:0;">
+                            <button type="submit" class="dropdown-item dropdown-logout">🔌 Log Out</button>
+                        </form>
+                    </div>
+                </div>
+            <% } else { %>
+                <a href="/" class="toolbar-btn">🔑 Log In</a>
+                <a href="/register" class="toolbar-btn">📝 Register</a>
+            <% } %>
+        </div>
+    </div>
+
+    <div class="xp-menubar">
+        <span class="menu-item">File</span>
+        <span class="menu-item">Edit</span>
+        <span class="menu-item">View</span>
+        <span class="menu-item">Favorites</span>
+        <span class="menu-item">Tools</span>
+        <span class="menu-item">Help</span>
+    </div>
+
+    <div class="xp-addressbar">
+        <span class="address-label">Address</span>
+        <div class="address-field">
+            <span class="address-icon">📂</span>
+            <span>C:\Forum\Posts</span>
+        </div>
+        <button class="xp-go-btn">Go</button>
+    </div>
+
+    <div class="category-bar">
+        <span class="category-label">Categories:</span>
+        <a href="/posts" class="category-tag <%= (!locals.activeCategory) ? 'active' : '' %>">All</a>
+        <% if (locals.categories && categories.length > 0) { %>
+            <% categories.forEach(function(cat) { %>
+                <a href="/posts?category=<%= cat.id %>"
+                   class="category-tag <%= (locals.activeCategory && activeCategory == cat.id) ? 'active' : '' %>">
+                    <%= cat.name %>
+                </a>
+            <% }) %>
+        <% } %>
+    </div>
+
+    <div class="posts-list">
+        <% if (locals.posts && posts.length > 0) { %>
+            <% posts.forEach(function(post) { %>
+                <div class="post-card">
+                    <div class="post-votes">
+                        <% if (locals.user) { %>
+                            <form action="/posts/<%= post.id %>/like" method="post" style="margin:0;">
+                                <button type="submit" class="vote-btn vote-up" title="Like">▲</button>
+                            </form>
+                        <% } else { %>
+                            <span class="vote-btn vote-up disabled" title="Log in to vote">▲</span>
+                        <% } %>
+                        <span class="vote-count"><%= post.likes - post.dislikes %></span>
+                        <% if (locals.user) { %>
+                            <form action="/posts/<%= post.id %>/dislike" method="post" style="margin:0;">
+                                <button type="submit" class="vote-btn vote-down" title="Dislike">▼</button>
+                            </form>
+                        <% } else { %>
+                            <span class="vote-btn vote-down disabled" title="Log in to vote">▼</span>
+                        <% } %>
+                    </div>
+
+                    <div class="post-content">
+                        <div class="post-meta">
+                            <span class="post-category-badge"><%= post.category_name || 'General' %></span>
+                            <span class="post-author">
+                                Posted by <a href="/profile/<%= post.user_id %>"><%= post.username %></a>
+                            </span>
+                            <span class="post-date"><%= post.created_at %></span>
+                        </div>
+
+                        <a href="/posts/<%= post.id %>" class="post-title-link">
+                            <h3 class="post-title"><%= post.title %></h3>
+                        </a>
+
+                        <% if (post.content) { %>
+                            <p class="post-preview"><%= post.content.substring(0, 200) %><%= post.content.length > 200 ? '...' : '' %></p>
+                        <% } %>
+
+                        <div class="post-actions">
+                            <a href="/posts/<%= post.id %>" class="post-action-btn">
+                                💬 <%= post.comment_count || 0 %> Comments
+                            </a>
+                            <span class="post-action-btn">📋 Share</span>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <div class="empty-state">
+                <div class="empty-icon">📭</div>
+                <p class="empty-text">No posts yet.</p>
+                <% if (locals.user) { %>
+                    <a href="/posts/create" class="xp-btn">Create the first post</a>
+                <% } else { %>
+                    <p class="empty-sub">Log in to create the first post.</p>
+                <% } %>
+            </div>
+        <% } %>
+    </div>
+
+    <div class="xp-statusbar">
+        <span><%= (locals.posts) ? posts.length : 0 %> post(s)</span>
+        <span>📡 Connected</span>
+    </div>
+
+    <div class="resize-handle" id="resizeHandle"></div>
+</div>
+
+<div class="xp-taskbar" id="taskbar">
+    <div class="taskbar-left">
+        <button class="start-btn" id="startBtn">
+            <span class="start-flag">
+                <span class="sf-r"></span><span class="sf-g"></span>
+                <span class="sf-b"></span><span class="sf-y"></span>
+            </span>
+            <span class="start-text">start</span>
+        </button>
+
+        <div class="taskbar-divider"></div>
+
+        <button class="taskbar-entry active" id="taskbarEntry" onclick="toggleWindow()">
+            📂 Forum Posts
+        </button>
+    </div>
+
+    <div class="taskbar-right">
+        <div class="system-tray">
+            <span class="tray-icon">🔊</span>
+            <span class="tray-icon">🛡️</span>
+            <span class="tray-clock" id="trayClock"></span>
+        </div>
+    </div>
+</div>
+
+
+<script>
+const win = document.getElementById('postsWindow');
+const titlebar = document.getElementById('titlebar');
+const taskbarEntry = document.getElementById('taskbarEntry');
+const folderIcon = document.getElementById('folderIcon');
+
+let isMaximized = false;
+let isMinimized = false;
+let savedRect = null;
+
+(function initPosition() {
+    const w = 920;
+    const h = window.innerHeight - 100;
+    win.style.width = w + 'px';
+    win.style.height = Math.min(h, 640) + 'px';
+    win.style.left = Math.max(0, (window.innerWidth - w) / 2) + 'px';
+    win.style.top = '20px';
+})();
+
+let isDragging = false;
+let dragOffsetX = 0;
+let dragOffsetY = 0;
+
+titlebar.addEventListener('mousedown', function(e) {
+    if (e.target.closest('.ctrl-btn, .close-btn')) return;
+    if (isMaximized) return;
+    isDragging = true;
+    dragOffsetX = e.clientX - win.offsetLeft;
+    dragOffsetY = e.clientY - win.offsetTop;
+    win.style.transition = 'none';
+    document.body.style.userSelect = 'none';
+});
+
+document.addEventListener('mousemove', function(e) {
+    if (!isDragging) return;
+    let x = e.clientX - dragOffsetX;
+    let y = e.clientY - dragOffsetY;
+
+    x = Math.max(0, Math.min(x, window.innerWidth - 100));
+    y = Math.max(0, Math.min(y, window.innerHeight - 80));
+    win.style.left = x + 'px';
+    win.style.top = y + 'px';
+});
+
+document.addEventListener('mouseup', function() {
+    isDragging = false;
+    document.body.style.userSelect = '';
+});
+
+function minimizeWindow() {
+    win.classList.add('minimized');
+    isMinimized = true;
+    taskbarEntry.classList.remove('active');
+}
+
+function toggleWindow() {
+    if (isMinimized) {
+        win.classList.remove('minimized');
+        isMinimized = false;
+        taskbarEntry.classList.add('active');
+    } else {
+        minimizeWindow();
+    }
+}
+
+function maximizeWindow() {
+    if (isMaximized) {
+        win.style.left = savedRect.left;
+        win.style.top = savedRect.top;
+        win.style.width = savedRect.width;
+        win.style.height = savedRect.height;
+        win.classList.remove('maximized');
+        isMaximized = false;
+    } else {
+        savedRect = {
+            left: win.style.left,
+            top: win.style.top,
+            width: win.style.width,
+            height: win.style.height
+        };
+        win.style.left = '0';
+        win.style.top = '0';
+        win.style.width = '100vw';
+        win.style.height = 'calc(100vh - 40px)';
+        win.classList.add('maximized');
+        isMaximized = true;
+    }
+}
+
+function closeWindow() {
+    win.style.display = 'none';
+    taskbarEntry.style.display = 'none';
+}
+
+function openWindow() {
+    win.style.display = 'flex';
+    win.classList.remove('minimized');
+    taskbarEntry.style.display = 'block';
+    taskbarEntry.classList.add('active');
+    isMinimized = false;
+}
+
+titlebar.addEventListener('dblclick', function(e) {
+    if (e.target.closest('.ctrl-btn, .close-btn')) return;
+    maximizeWindow();
+});
+
+const resizeHandle = document.getElementById('resizeHandle');
+let isResizing = false;
+
+resizeHandle.addEventListener('mousedown', function(e) {
+    if (isMaximized) return;
+    isResizing = true;
+    document.body.style.userSelect = 'none';
+    e.preventDefault();
+});
+
+document.addEventListener('mousemove', function(e) {
+    if (!isResizing) return;
+    const newW = e.clientX - win.offsetLeft;
+    const newH = e.clientY - win.offsetTop;
+    if (newW > 500) win.style.width = newW + 'px';
+    if (newH > 300) win.style.height = newH + 'px';
+});
+
+document.addEventListener('mouseup', function() {
+    isResizing = false;
+    document.body.style.userSelect = '';
+});
+
+function handleSearch() {
+    const query = document.getElementById('searchInput').value.trim();
+    if (query) window.location.href = '/posts?search=' + encodeURIComponent(query);
+}
+document.getElementById('searchInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') handleSearch();
+});
+
+const profileToggle = document.getElementById('profileToggle');
+const dropdownMenu = document.getElementById('dropdownMenu');
+if (profileToggle && dropdownMenu) {
+    profileToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdownMenu.classList.toggle('show');
+    });
+    document.addEventListener('click', function() {
+        dropdownMenu.classList.remove('show');
+    });
+}
+
+function updateClock() {
+    const now = new Date();
+    const h = now.getHours();
+    const m = String(now.getMinutes()).padStart(2, '0');
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const h12 = h % 12 || 12;
+    document.getElementById('trayClock').textContent = h12 + ':' + m + ' ' + ampm;
+}
+updateClock();
+setInterval(updateClock, 30000);
+
+document.querySelectorAll('.desktop-icon').forEach(function(icon) {
+    icon.addEventListener('click', function() {
+        document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
+        icon.classList.add('selected');
+    });
+});
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.desktop-icon')) {
+        document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
+    }
+});
+</script>
+
+</body>
+</html>
