@@ -1,0 +1,968 @@
+/* ═══════════════════════════════════════════
+   POSTS PAGE — Full Windows XP Desktop
+   Companion to your existing style.css
+   ═══════════════════════════════════════════ */
+
+/* ── Desktop body ── */
+.posts-body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+
+    width: 100vw;
+    height: 100vh;
+
+    background: url(background.png);
+    background-size: cover;
+    background-attachment: fixed;
+
+    font-family: Tahoma, sans-serif;
+    font-size: 12px;
+
+    position: relative;
+}
+
+
+/* ═══════════ DESKTOP ICONS ═══════════ */
+.desktop-icons {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    z-index: 1;
+}
+
+.desktop-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+
+    width: 72px;
+    padding: 6px 4px;
+
+    cursor: default;
+    border: 1px solid transparent;
+    border-radius: 2px;
+}
+
+.desktop-icon:hover {
+    background: rgba(0, 0, 200, 0.08);
+    border-color: rgba(0, 0, 200, 0.15);
+}
+
+.desktop-icon.selected {
+    background: rgba(0, 80, 200, 0.2);
+    border-color: rgba(0, 80, 200, 0.5);
+}
+
+.icon-img {
+    font-size: 36px;
+    line-height: 1;
+    filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.3));
+}
+
+.icon-label {
+    font-size: 11px;
+    color: white;
+    text-align: center;
+    text-shadow:
+        1px 1px 2px #000,
+       -1px -1px 2px #000,
+        1px -1px 2px #000,
+       -1px  1px 2px #000;
+
+    word-wrap: break-word;
+    max-width: 72px;
+}
+
+
+/* ═══════════ XP WINDOW ═══════════ */
+.posts-window {
+    position: absolute;
+    z-index: 10;
+
+    display: flex;
+    flex-direction: column;
+
+    background: #ECE9D8;
+    border: 2px solid #003c74;
+    border-radius: 8px 8px 0 0;
+    box-shadow: 3px 5px 16px rgba(0, 0, 0, 0.45);
+
+    overflow: hidden;
+    transition: opacity 0.15s, transform 0.15s;
+}
+
+.posts-window.minimized {
+    opacity: 0;
+    transform: scale(0.1) translateY(100vh);
+    pointer-events: none;
+}
+
+.posts-window.maximized {
+    border-radius: 0;
+}
+
+/* ── Title bar ── */
+.posts-window .xp-titlebar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 4px 6px 4px 8px;
+    min-height: 28px;
+
+    background: linear-gradient(
+        to bottom,
+        #0997ff,
+        #0053ee 8%,
+        #0050ee 40%,
+        #0046d5 88%,
+        #0234af
+    );
+
+    color: white;
+    font-weight: bold;
+    font-size: 13px;
+
+    cursor: move;
+    user-select: none;
+}
+
+.titlebar-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+}
+
+.titlebar-controls {
+    display: flex;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+.ctrl-btn {
+    width: 22px;
+    height: 22px;
+
+    background: linear-gradient(to bottom, #dde4f0, #aab8d4);
+    border: 1px solid #3d6eb5;
+    border-radius: 3px;
+
+    color: #1a3a6e;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1;
+
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ctrl-btn:hover {
+    background: linear-gradient(to bottom, #eef2f8, #bcc8e0);
+}
+
+.ctrl-btn:active {
+    background: linear-gradient(to bottom, #99aac4, #8898b4);
+}
+
+.posts-window .close-btn {
+    width: 22px;
+    height: 22px;
+
+    background: linear-gradient(to bottom, #e08356, #c53e11);
+    border: 1px solid #993311;
+    border-radius: 3px;
+
+    color: white;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 1;
+
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.posts-window .close-btn:hover {
+    background: linear-gradient(to bottom, #f09366, #d54e21);
+}
+
+/* ── Toolbar (nav + search + user) ── */
+.xp-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 6px;
+
+    background: linear-gradient(to bottom, #f6f4ec, #ece9d8);
+    border-bottom: 1px solid #c8c4b0;
+}
+
+.toolbar-left,
+.toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+.toolbar-center {
+    flex: 1;
+    min-width: 120px;
+    max-width: 340px;
+    margin: 0 4px;
+}
+
+.toolbar-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+
+    height: 24px;
+    padding: 0 8px;
+
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 2px;
+
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.toolbar-btn:hover {
+    background: #dcd8c8;
+    border-color: #aca89a;
+}
+
+.toolbar-create {
+    font-weight: bold;
+    color: #003c74;
+}
+
+.toolbar-sep {
+    width: 1px;
+    height: 20px;
+    background: #c8c4b0;
+    margin: 0 2px;
+}
+
+/* ── Search bar ── */
+.search-bar {
+    display: flex;
+    width: 100%;
+}
+
+.xp-search-input {
+    flex: 1;
+    height: 22px;
+    padding: 0 6px;
+
+    border: 2px inset #c8c8c8;
+    background: white;
+
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+    outline: none;
+}
+
+.xp-search-input:focus {
+    border-color: #7f9db9;
+}
+
+.xp-search-btn {
+    height: 22px;
+    padding: 0 6px;
+
+    background: #ECE9D8;
+    border: 1px solid #919b9c;
+    border-top-color: #fff;
+    border-left-color: #fff;
+
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.xp-search-btn:active {
+    border-top-color: #919b9c;
+    border-left-color: #919b9c;
+    border-bottom-color: #fff;
+    border-right-color: #fff;
+}
+
+/* ── Profile dropdown ── */
+.profile-dropdown {
+    position: relative;
+}
+
+.profile-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    height: 24px;
+    padding: 0 8px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+    color: #000;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.profile-btn:hover {
+    background: #dcd8c8;
+    border-color: #aca89a;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 28px;
+
+    min-width: 150px;
+
+    background: #ECE9D8;
+    border: 2px outset #d4d0c8;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.25);
+
+    z-index: 200;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 5px 12px;
+    box-sizing: border-box;
+
+    background: none;
+    border: none;
+
+    font-family: Tahoma, sans-serif;
+    font-size: 12px;
+    text-align: left;
+    text-decoration: none;
+    color: #000;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background: #316ac5;
+    color: white;
+}
+
+.dropdown-divider {
+    height: 1px;
+    margin: 2px 4px;
+    background: #aca899;
+}
+
+.dropdown-logout {
+    color: #a00;
+}
+
+.dropdown-logout:hover {
+    color: white;
+    background: #a03030;
+}
+
+
+/* ── Menu bar ── */
+.xp-menubar {
+    display: flex;
+    gap: 0;
+    padding: 2px 4px;
+
+    background: #ECE9D8;
+    border-bottom: 1px solid #aca899;
+}
+
+.menu-item {
+    padding: 2px 7px;
+    font-size: 11px;
+    color: #000;
+    cursor: default;
+}
+
+.menu-item:hover {
+    background: #316ac5;
+    color: white;
+}
+
+/* ── Address bar ── */
+.xp-addressbar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 6px;
+
+    background: #ECE9D8;
+    border-bottom: 1px solid #aca899;
+}
+
+.address-label {
+    font-size: 11px;
+    color: #000;
+    white-space: nowrap;
+}
+
+.address-field {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    height: 20px;
+    padding: 0 4px;
+
+    background: white;
+    border: 2px inset #c8c8c8;
+
+    font-size: 11px;
+    color: #000;
+}
+
+.address-icon {
+    font-size: 13px;
+}
+
+.xp-go-btn {
+    height: 20px;
+    padding: 0 10px;
+
+    background: #ECE9D8;
+    border: 1px solid #919b9c;
+    border-top-color: #fff;
+    border-left-color: #fff;
+
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+
+/* ── Category bar ── */
+.category-bar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 3px;
+    padding: 4px 8px;
+
+    background: #f1efe2;
+    border-bottom: 1px solid #aca899;
+}
+
+.category-label {
+    font-size: 11px;
+    font-weight: bold;
+    color: #333;
+    margin-right: 4px;
+}
+
+.category-tag {
+    display: inline-block;
+    padding: 1px 8px;
+
+    background: #ECE9D8;
+    border: 1px solid #919b9c;
+    border-top-color: #fff;
+    border-left-color: #fff;
+
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+    text-decoration: none;
+    color: #000;
+    line-height: 18px;
+
+    cursor: pointer;
+}
+
+.category-tag:hover {
+    background: #d4d0c0;
+}
+
+.category-tag.active {
+    background: linear-gradient(to bottom, #fff, #cce0ff);
+    border: 2px inset #7f9db9;
+    font-weight: bold;
+    color: #003c74;
+}
+
+
+/* ═══════════ POSTS LIST ═══════════ */
+.posts-list {
+    flex: 1;
+    overflow-y: auto;
+    background: white;
+}
+
+/* ── Post card ── */
+.post-card {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid #d4d0c8;
+}
+
+.post-card:hover {
+    background: #eff5ff;
+}
+
+/* ── Vote column ── */
+.post-votes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+
+    padding: 10px 8px;
+
+    background: #f5f3ea;
+    border-right: 1px solid #d4d0c8;
+
+    min-width: 46px;
+}
+
+.vote-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 22px;
+    height: 18px;
+
+    background: #ECE9D8;
+    border: 1px solid #919b9c;
+    border-top-color: #fff;
+    border-left-color: #fff;
+
+    font-size: 10px;
+    color: #555;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.vote-btn:hover:not(.disabled) {
+    background: #d4d0c0;
+}
+
+.vote-btn:active:not(.disabled) {
+    border-top-color: #919b9c;
+    border-left-color: #919b9c;
+    border-bottom-color: #fff;
+    border-right-color: #fff;
+}
+
+.vote-btn.disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.vote-count {
+    font-size: 12px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* ── Post content ── */
+.post-content {
+    flex: 1;
+    padding: 8px 12px;
+    min-width: 0;
+}
+
+.post-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 3px;
+    font-size: 10px;
+    color: #888;
+}
+
+.post-category-badge {
+    display: inline-block;
+    padding: 1px 6px;
+    background: #316ac5;
+    border-radius: 2px;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.post-author a {
+    color: #316ac5;
+    text-decoration: none;
+}
+
+.post-author a:hover {
+    text-decoration: underline;
+}
+
+.post-title-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.post-title {
+    margin: 3px 0;
+    font-size: 14px;
+    font-weight: bold;
+    color: #003c74;
+}
+
+.post-title-link:hover .post-title {
+    text-decoration: underline;
+}
+
+.post-preview {
+    margin: 3px 0 6px;
+    font-size: 11px;
+    color: #444;
+    line-height: 1.4;
+}
+
+.post-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.post-action-btn {
+    padding: 2px 6px;
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+    color: #666;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.post-action-btn:hover {
+    background: #e8e4d8;
+    color: #333;
+}
+
+
+/* ── Empty state ── */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.empty-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.empty-text {
+    font-size: 14px;
+    font-weight: bold;
+    color: #666;
+    margin: 0 0 8px;
+}
+
+.empty-sub {
+    font-size: 12px;
+    color: #999;
+    margin: 0;
+}
+
+.xp-btn {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 4px 16px;
+
+    background: #ECE9D8;
+    border: 1px solid #919b9c;
+    border-top-color: #fff;
+    border-left-color: #fff;
+
+    font-family: Tahoma, sans-serif;
+    font-size: 12px;
+    text-decoration: none;
+    color: #000;
+    cursor: pointer;
+}
+
+.xp-btn:hover {
+    background: #d4d0c0;
+}
+
+
+/* ── Status bar ── */
+.xp-statusbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 8px;
+    background: #ECE9D8;
+    border-top: 1px solid #aca899;
+    font-size: 11px;
+    color: #555;
+    flex-shrink: 0;
+}
+
+
+/* ── Resize handle ── */
+.resize-handle {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 16px;
+    height: 16px;
+    cursor: nwse-resize;
+    background:
+        linear-gradient(135deg,
+            transparent 30%,
+            #aca899 30%, #aca899 35%,
+            transparent 35%, transparent 45%,
+            #aca899 45%, #aca899 50%,
+            transparent 50%, transparent 60%,
+            #aca899 60%, #aca899 65%,
+            transparent 65%
+        );
+}
+
+.posts-window.maximized .resize-handle {
+    display: none;
+}
+
+
+/* ═══════════ TASKBAR (bottom) ═══════════ */
+.xp-taskbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    height: 36px;
+    padding: 0 2px;
+
+    background: linear-gradient(
+        to bottom,
+        #3168d5,
+        #1941a5 4%,
+        #1941a5 50%,
+        #1839a0 50%,
+        #122f8a
+    );
+
+    border-top: 2px solid #0a50c8;
+}
+
+.taskbar-left {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+}
+
+.taskbar-right {
+    display: flex;
+    align-items: center;
+}
+
+/* ── Start button ── */
+.start-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    height: 30px;
+    padding: 0 12px 0 6px;
+    margin-left: 1px;
+
+    background: linear-gradient(
+        to bottom,
+        #3caa3c,
+        #2d8e2d 50%,
+        #257d25 50%,
+        #1d6c1d
+    );
+
+    border: none;
+    border-right: 1px solid #1a5a1a;
+    border-radius: 0 8px 8px 0;
+
+    color: white;
+    font-family: Tahoma, sans-serif;
+    font-weight: bold;
+    font-size: 13px;
+    font-style: italic;
+
+    cursor: pointer;
+}
+
+.start-btn:hover {
+    background: linear-gradient(
+        to bottom,
+        #4cba4c,
+        #3d9e3d 50%,
+        #358d35 50%,
+        #2d7c2d
+    );
+}
+
+.start-flag {
+    display: grid;
+    grid-template-columns: 7px 7px;
+    gap: 1px;
+}
+
+.sf-r { background: #ff3030; width: 7px; height: 7px; }
+.sf-g { background: #30cc30; width: 7px; height: 7px; }
+.sf-b { background: #3060ff; width: 7px; height: 7px; }
+.sf-y { background: #ffcc00; width: 7px; height: 7px; }
+
+.start-text {
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.4);
+}
+
+.taskbar-divider {
+    width: 2px;
+    height: 24px;
+    background: linear-gradient(to right, #0a3a8a, #3a7ae0);
+    margin: 0 4px;
+}
+
+/* ── Taskbar window entry ── */
+.taskbar-entry {
+    height: 26px;
+    padding: 0 12px;
+    max-width: 200px;
+
+    background: linear-gradient(
+        to bottom,
+        #3c7bda,
+        #2a5fb0 50%,
+        #2554a0 50%,
+        #1e4990
+    );
+
+    border: 1px solid #0a2870;
+    border-radius: 2px;
+
+    color: white;
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    text-align: left;
+
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.taskbar-entry:hover {
+    background: linear-gradient(
+        to bottom,
+        #4c8bea,
+        #3a6fc0 50%,
+        #3564b0 50%,
+        #2e59a0
+    );
+}
+
+.taskbar-entry.active {
+    background: linear-gradient(
+        to bottom,
+        #5090ee,
+        #3a78d0 50%,
+        #3570c4 50%,
+        #2e66b8
+    );
+    border-color: #0a3aaa;
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.15);
+}
+
+/* ── System tray ── */
+.system-tray {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    height: 32px;
+    padding: 0 12px 0 8px;
+
+    background: linear-gradient(
+        to bottom,
+        #0e82e8,
+        #1165c4 50%,
+        #0f5ab4 50%,
+        #0c4fa0
+    );
+
+    border-left: 2px solid #0a50a0;
+    border-radius: 2px 0 0 2px;
+}
+
+.tray-icon {
+    font-size: 14px;
+    cursor: default;
+}
+
+.tray-clock {
+    font-size: 11px;
+    color: white;
+    font-weight: bold;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    white-space: nowrap;
+}
+
+
+/* ═══════════ RESPONSIVE ═══════════ */
+@media (max-width: 640px) {
+    .desktop-icons {
+        top: 8px;
+        left: 8px;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .posts-window {
+        left: 0 !important;
+        top: 0 !important;
+        width: 100vw !important;
+        height: calc(100vh - 40px) !important;
+        border-radius: 0;
+    }
+
+    .xp-toolbar {
+        flex-wrap: wrap;
+    }
+
+    .toolbar-center {
+        order: 3;
+        max-width: 100%;
+        width: 100%;
+    }
+}
