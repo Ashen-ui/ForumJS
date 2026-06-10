@@ -56,14 +56,11 @@ exports.requestRouter.post("/logout", (req, res) => {
     res.clearCookie("session");
     res.redirect("/");
 });
+exports.requestRouter.get("/", (req, res) => {
+    res.redirect("/posts");
+});
 exports.requestRouter.get("/login", (req, res) => {
     res.render("login");
-});
-exports.requestRouter.get("/", (req, res) => {
-    res.render("index");
-});
-exports.requestRouter.get("/index", (req, res) => {
-    res.render("index");
 });
 exports.requestRouter.get("/register", (req, res) => {
     res.render("registration");

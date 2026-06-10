@@ -61,16 +61,12 @@ requestRouter.post("/logout", (req, res) => {
     res.redirect("/")
 })
 
+requestRouter.get("/", (req, res) => {
+    res.redirect("/posts")
+})
+
 requestRouter.get("/login", (req, res) => {
   res.render("login")
-})
-
-requestRouter.get("/", (req, res) => {
-    res.render("index")
-})
-
-requestRouter.get("/index", (req, res) => {
-    res.render("index")
 })
 
 requestRouter.get("/register", (req, res) => {
