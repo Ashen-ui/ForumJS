@@ -80,3 +80,38 @@ requestRouter.get("/register", (req, res) => {
 requestRouter.get("/static", (req, res) => {
     res.send("./views/static")
 })
+
+
+//Get request for the main page
+requestRouter.get("/posts", (req, res) => {
+    const categories = db.prepare("SELECT * FROM categories").all();
+
+    let posts;
+    if (req.query.category) {
+        posts = db.prepare(`
+            SELECT posts.*, users.username, categories.name as category_name
+            FROM posts
+            LEFT JOIN users ON posts.user_id = users.id
+            LEFT JOIN post_categories ON post_categories.post_id = posts.id
+            LEFT JOIN categories ON categories.id = post_categories.category_id
+            WHERE post_categories.category_id = ?
+            ORDER BY posts.created_at DESC
+        `).all(req.query.category);
+    } else {
+        posts = db.prepare(`
+            SELECT posts.*, users.username, categories.name as category_name
+            FROM posts
+            LEFT JOIN users ON posts.user_id = users.id
+            LEFT JOIN post_categories ON post_categories.post_id = posts.id
+            LEFT JOIN categories ON categories.id = post_categories.category_id
+            ORDER BY posts.created_at DESC
+        `).all();
+    }
+
+    res.render("posts", {
+        user: res.locals.user,
+        posts: posts,
+        categories: categories,
+        activeCategory: req.query.category || null
+    });
+});

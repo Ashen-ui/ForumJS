@@ -71,3 +71,35 @@ exports.requestRouter.get("/register", (req, res) => {
 exports.requestRouter.get("/static", (req, res) => {
     res.send("./views/static");
 });
+//Get request for the main page
+exports.requestRouter.get("/posts", (req, res) => {
+    const categories = db_1.db.prepare("SELECT * FROM categories").all();
+    let posts;
+    if (req.query.category) {
+        posts = db_1.db.prepare(`
+            SELECT posts.*, users.username, categories.name as category_name
+            FROM posts
+            LEFT JOIN users ON posts.user_id = users.id
+            LEFT JOIN post_categories ON post_categories.post_id = posts.id
+            LEFT JOIN categories ON categories.id = post_categories.category_id
+            WHERE post_categories.category_id = ?
+            ORDER BY posts.created_at DESC
+        `).all(req.query.category);
+    }
+    else {
+        posts = db_1.db.prepare(`
+            SELECT posts.*, users.username, categories.name as category_name
+            FROM posts
+            LEFT JOIN users ON posts.user_id = users.id
+            LEFT JOIN post_categories ON post_categories.post_id = posts.id
+            LEFT JOIN categories ON categories.id = post_categories.category_id
+            ORDER BY posts.created_at DESC
+        `).all();
+    }
+    res.render("posts", {
+        user: res.locals.user,
+        posts: posts,
+        categories: categories,
+        activeCategory: req.query.category || null
+    });
+});
