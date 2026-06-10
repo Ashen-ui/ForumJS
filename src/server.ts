@@ -7,9 +7,10 @@ const app = express()
 
 app.set("view engine", "ejs")
 app.use(express.static(path.join(__dirname, "..", "/static")))
-app.use("/", requestRouter)
 app.use(express.urlencoded({ extended: true}))
 app.use(authUser)
+app.use("/", requestRouter)
+
 
 app.listen(3000, () => {
     console.log(`Express running`);

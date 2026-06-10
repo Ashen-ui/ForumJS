@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Register New User</title>
+<title>Log On to Windows</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<form action="/register" method="post">
-<div class="xp-window">
+<div class="xp-window xp-window-sm">
+
     <div class="xp-titlebar">
-        <span>Register New User</span>
+        <span>Log On to Windows</span>
         <button class="close-btn">✕</button>
     </div>
 
@@ -36,7 +36,7 @@
         <div class="xp-header-ms">Microsoft&reg;</div>
     </div>
 
-    <div class="xp-form">
+    <form class="xp-form" action="/login" method="post">
         <div class="row">
             <label>User name:</label>
             <input type="text" name="username" required>
@@ -47,32 +47,13 @@
             <input type="password" name="password" required>
         </div>
 
-        <div class="row">
-            <label>Confirm password:</label>
-            <input type="password" name="confirmPassword" required>
-        </div>
-
-        <div class="row">
-            <label>Email:</label>
-            <input type="email" 
-            name="email" required>
-        </div>
-
-        <div class="policy">
-            <input type="checkbox" required>
-            <span>I accept the User Policy</span>
-        </div>
-
         <div class="buttons">
-            <button type="submit">Register</button>
-            <button type="button">Cancel</button>
-            <button type="button" onclick="window.location.href='http://localhost:3000/index'">Back</button>
+            <button type="submit">Log-In</button>
         </div>
 
-    </div>
+    </form>
 
 </div>
-</form>
 
 </body>
 </html>
