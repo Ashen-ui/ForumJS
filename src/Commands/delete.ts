@@ -1,5 +1,9 @@
 import Database from "better-sqlite3"
+import path from "path"
 
-const db = new Database("../forum.db")
-db.prepare("DELETE FROM users WHERE username = ?").run("kazakisquad")
+const dbPath = path.join(__dirname, "..", "..", "forum.db")
+const db = new Database()
+
+
+db.prepare("DELETE FROM users WHERE username = ?").run("kazakisquad ")
 db.close()

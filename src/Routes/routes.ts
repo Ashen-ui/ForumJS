@@ -8,7 +8,10 @@ export const requestRouter = express.Router()
 
 //Registration
 requestRouter.post("/register", (req, res) => {
-    const { username, email, password, confirmPassword } = req.body
+    const username = req.body.username?.trim()
+    const email = req.body.email?.trim()
+    const password = req.body.password
+    const confirmPassword = req.body.confirmPassword
     if (!username || !email || !password) {
         return res.status(400).render("registration", { error: "All fields are necessary"})
     }
