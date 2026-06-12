@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Edit Post</title>
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/posts.css">
+</head>
+<body>
+<div class="xp-window" style="width:600px;margin:40px auto;">
+    <div class="xp-titlebar">
+        <span>✏️ Edit Post</span>
+        <a href="/posts/<%= post.id %>" class="close-btn" style="text-decoration:none;">✕</a>
+    </div>
+    <form class="xp-form" action="/posts/<%= post.id %>/edit" method="post">
+        <div class="row">
+            <label>Title:</label>
+            <input type="text" name="title" value="<%= post.title %>" required>
+        </div>
+        <div class="row" style="align-items:flex-start;">
+            <label>Content:</label>
+            <textarea name="content" rows="8" required
+                style="flex:1;max-width:400px;font-family:Tahoma;font-size:12px;
+                       border:1px solid #7f9db9;padding:4px;"><%= post.content %></textarea>
+        </div>
+        <div class="row" style="align-items:flex-start;">
+            <label>Categories:</label>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <% categories.forEach(function(cat) { %>
+                    <label style="font-size:12px;display:flex;align-items:center;gap:4px;">
+                        <input type="checkbox" name="categories" value="<%= cat.id %>"
+                            <%= selected.includes(cat.id) ? 'checked' : '' %>>
+                        <%= cat.name %>
+                    </label>
+                <% }) %>
+            </div>
+        </div>
+        <% if (locals.error) { %>
+            <p style="color:red;font-size:12px;"><%= error %></p>
+        <% } %>
+        <div class="buttons">
+            <button type="submit">Save Changes</button>
+            <a href="/posts/<%= post.id %>" style="text-decoration:none;">
+                <button type="button">Cancel</button>
+            </a>
+        </div>
+    </form>
+</div>
+</body>
+</html>

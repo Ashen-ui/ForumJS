@@ -20,6 +20,6 @@ function authUser(req, res, next) {
 function deAuth(req, res, next) {
     if (!res.locals.user) {
         return res.redirect("/login");
-        next();
     }
+    next();
 }

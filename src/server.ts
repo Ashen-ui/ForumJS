@@ -12,7 +12,6 @@ app.use(cookieParser())
 app.use(authUser)
 app.use("/", requestRouter)
 
-
 app.listen(3000, () => {
     console.log(`Express running`);
 })

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title><%= post.title %></title>
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/posts.css">
+</head>
+<body class="posts-body">
+<div class="xp-window" style="width:700px;margin:40px auto;max-height:80vh;">
+    <div class="xp-titlebar">
+        <span>📄 <%= post.title %></span>
+        <a href="/posts" class="close-btn" style="text-decoration:none;">✕</a>
+    </div>
+    
+    <div style="padding:16px;background:white;overflow-y:auto;">
+        <div style="font-size:11px;color:#888;margin-bottom:8px;">
+            Posted by <strong><%= post.username %></strong>
+            on <%= post.created_at %>
+            <% if (categories.length > 0) { %>
+                in <% categories.forEach(function(cat, i) { %><span style="background:#316ac5;color:white;padding:1px 6px;font-size:10px;border-radius:2px;"><%= cat.name %></span> <% }) %>
+            <% } %>
+        </div>
+
+        <p style="font-size:13px;line-height:1.5;"><%= post.content %></p>
+
+        <div style="margin-top:12px;font-size:11px;color:#666;">
+            👍 <%= post.likes %> &nbsp; 👎 <%= post.dislikes %>
+        </div>
+
+        <% if (locals.user && user.id === post.user_id) { %>
+            <div style="margin-top:12px;display:flex;gap:8px;">
+                <a href="/posts/<%= post.id %>/edit" class="xp-btn">✏️ Edit</a>
+                <form action="/posts/<%= post.id %>/delete" method="post" style="margin:0;">
+                    <button type="submit" class="xp-btn"
+                        onclick="return confirm('Delete this post?')">🗑️ Delete</button>
+                </form>
+            </div>
+        <% } %>
+
+        <hr style="border:none;border-top:1px solid #d4d0c8;margin:16px 0;">
+        <h4 style="font-size:12px;margin:0 0 8px;">💬 Comments</h4>
+
+        <% if (locals.comments && comments.length > 0) { %>
+            <% comments.forEach(function(c) { %>
+                <div style="padding:6px 0;border-bottom:1px solid #eee;font-size:12px;">
+                    <strong><%= c.username %></strong>: <%= c.content %>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <p style="font-size:11px;color:#999;">No comments yet.</p>
+        <% } %>
+
+        <% if (locals.user) { %>
+            <form action="/posts/<%= post.id %>/comment" method="post"
+                  style="margin-top:12px;display:flex;gap:8px;">
+                <input type="text" name="content" placeholder="Write a comment..."
+                       required style="flex:1;height:22px;border:1px solid #7f9db9;
+                       padding:1px 4px;font-family:Tahoma;font-size:12px;">
+                <button type="submit" class="xp-btn">Post</button>
+            </form>
+        <% } else { %>
+            <p style="font-size:11px;color:#999;margin-top:8px;">
+                <a href="/login">Log in</a> to leave a comment.
+            </p>
+        <% } %>
+    </div>
+</div>
+</body>
+</html>

@@ -24,6 +24,6 @@ export function authUser(req: Request, res: Response, next: NextFunction) {
 export function deAuth(req: Request, res: Response, next: NextFunction) {
     if (!res.locals.user) {
         return res.redirect("/login")
-        next()
     }
+    next()
 }
