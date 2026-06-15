@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
+    "admin": "tsx ./src/Commands/admin.ts",
     "remove": "tsx ./src/Commands/delete.ts",
     "db": "tsx ./src/Database/db.ts",
     "start": "node ./dist/server.js",

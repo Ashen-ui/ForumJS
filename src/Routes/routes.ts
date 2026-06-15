@@ -3,12 +3,14 @@ import bcrypt from "bcrypt"
 import { v4 as hexChicken } from "uuid"
 import { db, insertUsers, insertSessions } from "../Database/db"
 import { deAuth } from "../Middleware/authentification"
-import { user, session, post } from "../Interfaces/types"
+import { user, session, post, reaction } from "../Interfaces/types"
 export const requestRouter = express.Router()
 
+requestRouter.get("/", (req, res) => {
+    res.redirect("/posts")
+})
 
-//Post Requests
-//Registration
+//Register + login + logout GET and POST requests
 requestRouter.post("/register", (req, res) => {
     const username = req.body.username?.trim()
     const email = req.body.email?.trim()
@@ -63,7 +65,17 @@ requestRouter.post("/logout", (req, res) => {
     res.redirect("/")
 })
 
-//save post
+requestRouter.get("/login", (req, res) => {
+  res.render("login")
+})
+
+requestRouter.get("/register", (req, res) => {
+    res.render("registration")
+})
+
+
+//Posts GET and POST requests
+//Save new post
 requestRouter.post("/posts", deAuth, (req, res) => {
     const title = req.body.title?.trim()
     const content = req.body.content?.trim()
@@ -102,21 +114,7 @@ requestRouter.post("/posts", deAuth, (req, res) => {
     res.redirect(`/posts/${postId}`)
 })
 
-
-//Get Requests
-requestRouter.get("/", (req, res) => {
-    res.redirect("/posts")
-})
-
-requestRouter.get("/login", (req, res) => {
-  res.render("login")
-})
-
-requestRouter.get("/register", (req, res) => {
-    res.render("registration")
-})
-
-//Get request for the main page
+//List Posts
 requestRouter.get("/posts", (req, res) => {
     const categories = db.prepare("SELECT * FROM categories").all();
     let query = `
@@ -150,6 +148,7 @@ requestRouter.get("/posts/create", deAuth, (req, res) => {
     res.render("create_post", { categories })
 })
 
+//Get Single Post
 requestRouter.get("/posts/:id", (req, res) => {
     const post = db.prepare(`
         SELECT posts.*, users.username,
@@ -180,7 +179,7 @@ requestRouter.get("/posts/:id", (req, res) => {
     res.render("post", { post, categories, comments })
 })
 
-//edit
+//Edit form
 requestRouter.get("/posts/:id/edit", deAuth, (req, res) => {
     const post = db.prepare("SELECT * FROM posts WHERE id = ?").get(req.params.id) as post || null
     if (!post) {
@@ -198,7 +197,8 @@ requestRouter.get("/posts/:id/edit", deAuth, (req, res) => {
     res.render("edit_post", { post, categories, selected })
 })
 
-//save the edit
+//Post Requests
+//Save edits
 requestRouter.post("/posts/:id/edit", deAuth, (req, res) => {
     const post = db.prepare("SELECT user_id FROM posts WHERE id = ?").get(req.params.id) as post || null
     if (!post) {
@@ -247,7 +247,7 @@ requestRouter.post("/posts/:id/delete", deAuth, (req, res) => {
 requestRouter.post("/posts/:id/like", deAuth, (req, res) => {
     const postId = req.params.id
     const userId = res.locals.user.id
-    const existing = db.prepare("SELECT * FROM reactions WHERE user_id = ? AND post_id = ?").get(userId, postId) as any
+    const existing = db.prepare("SELECT * FROM reactions WHERE user_id = ? AND post_id = ?").get(userId, postId) as reaction || null
 
     if (existing && existing.type === "like") {
         db.prepare("DELETE FROM reactions WHERE id = ?").run(existing.id)
@@ -284,4 +284,33 @@ requestRouter.post("/posts/:id/comment", deAuth, (req, res) => {
     db.prepare("INSERT INTO comments (post_id, user_id, content) VALUES (?, ?, ?)").run(req.params.id, res.locals.user.id, content)
 
     res.redirect(`/posts/${req.params.id}`)
+})
+
+requestRouter.get("/profile/:id", (req, res) => {
+    const profile = db.prepare("SELECT id, username, email, role, created_at FROM users WHERE id=?").get(req.params.id) as user || null
+    if (!profile) {
+        return res.status(404).render("404")
+    }
+    const posts = db.prepare(`
+            SELECT posts.*,    
+                (SELECT COUNT(*) FROM reactions WHERE post_id = posts.id AND type = 'like') AS likes,
+                (SELECT COUNT(*) FROM reactions WHERE post_id = posts.id AND type = 'dislike') AS dislikes,
+                (SELECT COUNT(*) FROM comments WHERE post_id = posts.id) AS comment_count
+            FROM posts
+            WHERE posts.user_id = ?
+            ORDER BY posts.created_at DESC
+        `).all(req.params.id)
+    const comments = db.prepare(`
+            SELECT comments.*, posts.title AS post_title
+            FROM comments
+            JOIN posts ON posts.id = comments.post_id
+            WHERE comments.user_id = ?
+            ORDER BY comments.created_at DESC
+        `).all(req.params.id)
+    const statistics = {
+        postNum: posts.length,
+        commentNum: comments.length,
+        likesGotten: posts.reduce((sum: number, i: any) => sum + (i.likes || 0), 0)
+    }
+    res.render("profile", { profile, posts, comments, statistics })
 })

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title><%= profile.username %>'s Profile</title>
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/posts.css">
+<style>
+.profile-window {
+    width: 680px;
+    margin: 30px auto;
+    background: #ECE9D8;
+    border: 2px solid #0855b6;
+    border-radius: 8px 8px 0 0;
+    box-shadow: 2px 4px 14px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    max-height: 85vh;
+    font-family: Tahoma, sans-serif;
+}
+
+.profile-banner {
+    background: linear-gradient(to bottom, #0997ff, #0053ee 10%, #0050ee 40%, #0046d5 88%, #0234af);
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.profile-avatar {
+    width: 56px; height: 56px;
+    background: #ECE9D8;
+    border: 2px solid white;
+    border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #808080;
+}
+.profile-name { color: white; font-weight: bold; font-size: 18px; }
+.profile-meta { color: rgba(255,255,255,0.75); font-size: 11px; margin-top: 2px; }
+.profile-badge {
+    margin-left: auto;
+    color: rgba(255,255,255,0.7);
+    font-size: 10px;
+    border: 1px solid rgba(255,255,255,0.35);
+    padding: 2px 8px;
+    border-radius: 2px;
+}
+
+.xp-tabs {
+    display: flex;
+    padding: 6px 8px 0;
+    background: #ECE9D8;
+    gap: 2px;
+}
+.xp-tab {
+    padding: 4px 14px;
+    font-family: Tahoma, sans-serif;
+    font-size: 12px;
+    background: #D6D2C4;
+    border: 1px solid #919B9C;
+    border-bottom: none;
+    border-radius: 3px 3px 0 0;
+    cursor: pointer;
+    color: #333;
+    position: relative;
+    top: 1px;
+}
+.xp-tab:hover { background: #E2DFD4; }
+.xp-tab.active {
+    background: #FFFFFF;
+    border-bottom: 1px solid #FFFFFF;
+    font-weight: bold;
+    color: #000;
+    z-index: 2;
+}
+
+.xp-tab-body {
+    border: 1px solid #919B9C;
+    border-top: 1px solid #919B9C;
+    background: #FFFFFF;
+    margin: 0 8px 8px;
+    flex: 1;
+    overflow-y: auto;
+}
+.tab-panel { display: none; padding: 10px 14px; }
+.tab-panel.active { display: block; }
+
+.profile-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 4px;
+    border-bottom: 1px solid #ECE9D8;
+    font-size: 12px;
+}
+.profile-row:hover { background: #EBF2FC; }
+.profile-row:last-child { border-bottom: none; }
+.score-box {
+    min-width: 36px;
+    text-align: center;
+    font-weight: bold;
+    color: #2E8B2E;
+    font-size: 12px;
+    background: #F5F3EA;
+    border: 1px solid #D4D0C8;
+    padding: 2px 4px;
+}
+.row-title {
+    color: #003c74;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 12px;
+}
+.row-title:hover { text-decoration: underline; }
+.row-sub { font-size: 10px; color: #888; margin-top: 1px; }
+.comment-text { color: #333; font-size: 12px; }
+.comment-on { font-size: 10px; color: #888; margin-top: 2px; }
+.comment-on a { color: #003c74; text-decoration: none; }
+.comment-on a:hover { text-decoration: underline; }
+
+.stat-cards {
+    display: flex;
+    gap: 0;
+    margin-bottom: 12px;
+}
+.stat-card {
+    flex: 1;
+    text-align: center;
+    padding: 14px 8px;
+    background: #F5F3EA;
+    border: 1px solid #D4D0C8;
+    border-right: none;
+}
+.stat-card:last-child { border-right: 1px solid #D4D0C8; }
+.stat-card:first-child { border-radius: 3px 0 0 3px; }
+.stat-card:last-child { border-radius: 0 3px 3px 0; }
+.stat-num { font-size: 24px; font-weight: bold; color: #003c74; }
+.stat-label { font-size: 11px; color: #666; margin-top: 2px; }
+
+.profile-status {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 8px;
+    background: #ECE9D8;
+    border-top: 1px solid #aca899;
+    font-size: 11px;
+    color: #555;
+    flex-shrink: 0;
+}
+
+.empty-msg {
+    text-align: center;
+    padding: 30px;
+    color: #999;
+    font-size: 12px;
+}
+</style>
+</head>
+<body class="posts-body">
+
+<div class="profile-window">
+    <div class="xp-titlebar">
+        <span>👤 <%= profile.username %> — Properties</span>
+        <a href="/posts" class="close-btn" style="text-decoration:none;">✕</a>
+    </div>
+
+    <div class="profile-banner">
+        <div class="profile-avatar">👤</div>
+        <div>
+            <div class="profile-name"><%= profile.username %></div>
+            <div class="profile-meta"><%= profile.role %> · Joined <%= profile.created_at %></div>
+        </div>
+        <% if (locals.user && user.id === profile.id) { %>
+            <div class="profile-badge">This is you</div>
+        <% } %>
+    </div>
+
+    <div class="xp-tabs">
+        <div class="xp-tab active" onclick="switchTab('posts')">📝 Posts</div>
+        <div class="xp-tab" onclick="switchTab('comments')">💬 Comments</div>
+        <div class="xp-tab" onclick="switchTab('stats')">📊 Statistics</div>
+    </div>
+
+    <div class="xp-tab-body">
+        <div class="tab-panel active" id="tab-posts">
+            <% if (posts.length > 0) { %>
+                <% posts.forEach(function(post) { %>
+                    <div class="profile-row">
+                        <div class="score-box">+<%= post.likes - post.dislikes %></div>
+                        <div style="flex:1;">
+                            <a href="/posts/<%= post.id %>" class="row-title"><%= post.title %></a>
+                            <div class="row-sub"><%= post.created_at %> · 💬 <%= post.comment_count || 0 %></div>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <div class="empty-msg">📭 No posts yet.</div>
+            <% } %>
+        </div>
+
+        <div class="tab-panel" id="tab-comments">
+            <% if (comments.length > 0) { %>
+                <% comments.forEach(function(c) { %>
+                    <div class="profile-row" style="flex-direction:column;align-items:flex-start;gap:2px;">
+                        <div class="comment-text">"<%= c.content %>"</div>
+                        <div class="comment-on">
+                            on <a href="/posts/<%= c.post_id %>"><%= c.post_title %></a>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <div class="empty-msg">💬 No comments yet.</div>
+            <% } %>
+        </div>
+
+        <div class="tab-panel" id="tab-stats">
+            <div class="stat-cards">
+                <div class="stat-card">
+                    <div class="stat-num"><%= statistics.postNum %></div>
+                    <div class="stat-label">Posts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num"><%= statistics.commentNum %></div>
+                    <div class="stat-label">Comments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num"><%= statistics.likesGotten %></div>
+                    <div class="stat-label">Likes received</div>
+                </div>
+            </div>
+
+            <div style="background:#F5F3EA;border:1px solid #D4D0C8;padding:12px;border-radius:3px;">
+                <div style="font-size:12px;font-weight:bold;color:#333;margin-bottom:6px;">ℹ️ About this user</div>
+                <div style="font-size:11px;color:#555;line-height:1.6;">
+                    <strong>Username:</strong> <%= profile.username %><br>
+                    <strong>Email:</strong> <%= profile.email %><br>
+                    <strong>Role:</strong> <%= profile.role %><br>
+                    <strong>Member since:</strong> <%= profile.created_at %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-status">
+        <span><%= profile.username %>'s profile</span>
+        <span>📡 Connected</span>
+    </div>
+</div>
+
+<script>
+function switchTab(name) {
+    document.querySelectorAll('.tab-panel').forEach(function(x) { x.classList.remove('active'); });
+    document.querySelectorAll('.xp-tab').forEach(function(y) { y.classList.remove('active'); });
+    document.getElementById('tab-' + name).classList.add('active');
+    event.target.classList.add('active');
+}
+</script>
+
+</body>
+</html>

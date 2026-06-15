@@ -1,0 +1,4 @@
+node_modules
+dist
+forum.db
+.git

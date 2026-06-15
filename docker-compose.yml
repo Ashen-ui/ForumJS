@@ -1,0 +1,11 @@
+services:
+  forum:
+    build: .
+    ports:
+      - "25034:25034"
+    volumes:
+      - storage:/runForum/data
+    restart: always
+
+volumes:
+  storage:

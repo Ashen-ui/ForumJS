@@ -10,8 +10,10 @@ const uuid_1 = require("uuid");
 const db_1 = require("../Database/db");
 const authentification_1 = require("../Middleware/authentification");
 exports.requestRouter = express_1.default.Router();
-//Post Requests
-//Registration
+exports.requestRouter.get("/", (req, res) => {
+    res.redirect("/posts");
+});
+//Register + login + logout GET and POST requests
 exports.requestRouter.post("/register", (req, res) => {
     const username = req.body.username?.trim();
     const email = req.body.email?.trim();
@@ -58,7 +60,14 @@ exports.requestRouter.post("/logout", (req, res) => {
     res.clearCookie("session");
     res.redirect("/");
 });
-//save post
+exports.requestRouter.get("/login", (req, res) => {
+    res.render("login");
+});
+exports.requestRouter.get("/register", (req, res) => {
+    res.render("registration");
+});
+//Posts GET and POST requests
+//Save new post
 exports.requestRouter.post("/posts", authentification_1.deAuth, (req, res) => {
     const title = req.body.title?.trim();
     const content = req.body.content?.trim();
@@ -88,17 +97,7 @@ exports.requestRouter.post("/posts", authentification_1.deAuth, (req, res) => {
     const postId = create();
     res.redirect(`/posts/${postId}`);
 });
-//Get Requests
-exports.requestRouter.get("/", (req, res) => {
-    res.redirect("/posts");
-});
-exports.requestRouter.get("/login", (req, res) => {
-    res.render("login");
-});
-exports.requestRouter.get("/register", (req, res) => {
-    res.render("registration");
-});
-//Get request for the main page
+//List Posts
 exports.requestRouter.get("/posts", (req, res) => {
     const categories = db_1.db.prepare("SELECT * FROM categories").all();
     let query = `
@@ -129,6 +128,7 @@ exports.requestRouter.get("/posts/create", authentification_1.deAuth, (req, res)
     const categories = db_1.db.prepare("SELECT * FROM categories ORDER BY name").all();
     res.render("create_post", { categories });
 });
+//Get Single Post
 exports.requestRouter.get("/posts/:id", (req, res) => {
     const post = db_1.db.prepare(`
         SELECT posts.*, users.username,
@@ -155,7 +155,7 @@ exports.requestRouter.get("/posts/:id", (req, res) => {
     `).all(req.params.id);
     res.render("post", { post, categories, comments });
 });
-//edit
+//Edit form
 exports.requestRouter.get("/posts/:id/edit", authentification_1.deAuth, (req, res) => {
     const post = db_1.db.prepare("SELECT * FROM posts WHERE id = ?").get(req.params.id) || null;
     if (!post) {
@@ -168,7 +168,8 @@ exports.requestRouter.get("/posts/:id/edit", authentification_1.deAuth, (req, re
     const selected = db_1.db.prepare("SELECT category_id FROM post_categories WHERE post_id = ?").all(req.params.id).map((r) => r.category_id);
     res.render("edit_post", { post, categories, selected });
 });
-//save the edit
+//Post Requests
+//Save edits
 exports.requestRouter.post("/posts/:id/edit", authentification_1.deAuth, (req, res) => {
     const post = db_1.db.prepare("SELECT user_id FROM posts WHERE id = ?").get(req.params.id) || null;
     if (!post) {
@@ -211,7 +212,7 @@ exports.requestRouter.post("/posts/:id/delete", authentification_1.deAuth, (req,
 exports.requestRouter.post("/posts/:id/like", authentification_1.deAuth, (req, res) => {
     const postId = req.params.id;
     const userId = res.locals.user.id;
-    const existing = db_1.db.prepare("SELECT * FROM reactions WHERE user_id = ? AND post_id = ?").get(userId, postId);
+    const existing = db_1.db.prepare("SELECT * FROM reactions WHERE user_id = ? AND post_id = ?").get(userId, postId) || null;
     if (existing && existing.type === "like") {
         db_1.db.prepare("DELETE FROM reactions WHERE id = ?").run(existing.id);
     }
@@ -245,4 +246,32 @@ exports.requestRouter.post("/posts/:id/comment", authentification_1.deAuth, (req
     }
     db_1.db.prepare("INSERT INTO comments (post_id, user_id, content) VALUES (?, ?, ?)").run(req.params.id, res.locals.user.id, content);
     res.redirect(`/posts/${req.params.id}`);
+});
+exports.requestRouter.get("/profile/:id", (req, res) => {
+    const profile = db_1.db.prepare("SELECT id, username, email, role, created_at FROM users WHERE id=?").get(req.params.id) || null;
+    if (!profile) {
+        return res.status(404).render("404");
+    }
+    const posts = db_1.db.prepare(`
+            SELECT posts.*,    
+                (SELECT COUNT(*) FROM reactions WHERE post_id = posts.id AND type = 'like') AS likes,
+                (SELECT COUNT(*) FROM reactions WHERE post_id = posts.id AND type = 'dislike') AS dislikes,
+                (SELECT COUNT(*) FROM comments WHERE post_id = posts.id) AS comment_count
+            FROM posts
+            WHERE posts.user_id = ?
+            ORDER BY posts.created_at DESC
+        `).all(req.params.id);
+    const comments = db_1.db.prepare(`
+            SELECT comments.*, posts.title AS post_title
+            FROM comments
+            JOIN posts ON posts.id = comments.post_id
+            WHERE comments.user_id = ?
+            ORDER BY comments.created_at DESC
+        `).all(req.params.id);
+    const statistics = {
+        postNum: posts.length,
+        commentNum: comments.length,
+        likesGotten: posts.reduce((sum, i) => sum + (i.likes || 0), 0)
+    };
+    res.render("profile", { profile, posts, comments, statistics });
 });
