@@ -10,7 +10,7 @@
 
 <div class="desktop-icons">
     <div class="desktop-icon" id="folderIcon" ondblclick="openWindow()">
-        <div class="icon-img">📂</div>
+        <div class="icon-img"><img src="/windowsFolder.png" style="width:40px;height:40px;vertical-align:middle;margin-right:-5px;"></div>
         <span class="icon-label">Forum Posts</span>
     </div>
 
@@ -25,7 +25,7 @@
         </a>
     <% } else { %>
         <a href="/login" class="desktop-icon" style="text-decoration:none;">
-            <div class="icon-img">🔑</div>
+            <div class="icon-img"><img src="/loginIcon.png" style="width:90px;height:60px;vertical-align:middle;margin-right:-2px;"></div>
             <span class="icon-label">Log In</span>
         </a>
         <a href="/register" class="desktop-icon" style="text-decoration:none;">
@@ -38,7 +38,7 @@
 <div class="xp-window posts-window" id="postsWindow">
 
     <div class="xp-titlebar" id="titlebar">
-        <span class="titlebar-text">📂 Forum Posts - Windows Explorer</span>
+        <span class="titlebar-text"><img src="/windowsFolder.png" style="width:18px;height:20px;vertical-align:middle;margin-right:2px;"> Forum Posts - Windows Explorer</span>
         <div class="titlebar-controls">
             <button class="ctrl-btn minimize-btn" onclick="minimizeWindow()" title="Minimize">_</button>
             <button class="ctrl-btn maximize-btn" onclick="maximizeWindow()" title="Maximize">□</button>
@@ -70,7 +70,7 @@
                         👤 <%= user.username %> ▾
                     </button>
                     <div class="dropdown-menu" id="dropdownMenu">
-                        <a href="/profile/<%= user.id %>" class="dropdown-item">📁 My Profile</a>
+                        <a href="/profile/<%= user.id %>" class="dropdown-item"><img src="/windowsFolder.png" style="width:18px;height:18px;vertical-align:middle;margin-right:4px;"> My Profile</a>
                         <div class="dropdown-divider"></div>
                         <form action="/logout" method="post" style="margin:0;">
                             <button type="submit" class="dropdown-item dropdown-logout">🔌 Log Out</button>
@@ -96,7 +96,7 @@
     <div class="xp-addressbar">
         <span class="address-label">Address</span>
         <div class="address-field">
-            <span class="address-icon">📂</span>
+            <span class="address-icon"><img src="/windowsFolder.png" style="width:18px;height:18px;vertical-align:middle;margin-right:4px;"></span>
             <span>C:\Forum\Posts</span>
         </div>
         <button class="xp-go-btn">Go</button>
@@ -197,7 +197,7 @@
         <div class="taskbar-divider"></div>
 
         <button class="taskbar-entry active" id="taskbarEntry" onclick="toggleWindow()">
-            📂 Forum Posts
+            <img src="/windowsFolder.png" style="width:18px;height:18px;vertical-align:middle;margin-right:4px;"> Forum Posts
         </button>
     </div>
 

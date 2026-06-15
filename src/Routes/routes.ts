@@ -116,11 +116,6 @@ requestRouter.get("/register", (req, res) => {
     res.render("registration")
 })
 
-requestRouter.get("/static", (req, res) => {
-    res.send("./views/static")
-})
-
-
 //Get request for the main page
 requestRouter.get("/posts", (req, res) => {
     const categories = db.prepare("SELECT * FROM categories").all();

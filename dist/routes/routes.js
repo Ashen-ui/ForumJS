@@ -98,9 +98,6 @@ exports.requestRouter.get("/login", (req, res) => {
 exports.requestRouter.get("/register", (req, res) => {
     res.render("registration");
 });
-exports.requestRouter.get("/static", (req, res) => {
-    res.send("./views/static");
-});
 //Get request for the main page
 exports.requestRouter.get("/posts", (req, res) => {
     const categories = db_1.db.prepare("SELECT * FROM categories").all();
